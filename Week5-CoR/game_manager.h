@@ -16,7 +16,6 @@ public:
     void runSession() {
         std::cout << "=== MEMULAI BALATRO RUN SESSION ===" << std::endl;
         
-        // Simulasi 3 putaran permainan (Round / Blind)
         for (int round = 1; round <= 3; ++round) {
             std::cout << "\n--- Round " << round << " ---" << std::endl;
             
