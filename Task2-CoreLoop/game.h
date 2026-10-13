@@ -1,7 +1,7 @@
-#ifndef GAME_LOGIC_H
-#define GAME_LOGIC_H
+#ifndef GAME_H
+#define GAME_H
 
-#include "core_engine.h"
+#include "core.h"
 #include <cstdlib>
 
 // Implementasi Aksi Pemain (Mutable)
