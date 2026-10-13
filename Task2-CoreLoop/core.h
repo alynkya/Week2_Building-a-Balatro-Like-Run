@@ -1,5 +1,5 @@
-#ifndef CORE_ENGINE_H
-#define CORE_ENGINE_H
+#ifndef CORE_H
+#define CORE_H
 
 #include <iostream>
 #include <memory>
