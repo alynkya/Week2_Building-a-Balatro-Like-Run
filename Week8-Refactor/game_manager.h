@@ -2,45 +2,51 @@
 #define GAME_MANAGER_H
 
 #include "game_rules.h"
-#include "ChosenHand.h"
 #include <iostream>
 
 class GameManager {
 private:
     HandGenerator handGenerator;
-    ChosenHand chosenHand; // Integrasi Tugas 1
+    ChosenHand chosenHand;
     ScoringRule scoringRule;
     BlindRule blindRule;
     RewardRule rewardRule;
+    JokerCard jokerCard;
     int playerMoney = 0;
 
 public:
+    GameManager() : jokerCard("Jolly Joker", 10, 2) {}
+
     void runSession() {
-        std::cout << "=== MEMULAI BALATRO RUN SESSION ===" << std::endl;
-        
+        std::cout << "=== Run Started (Joker Aktif: " << jokerCard.getName() << ") ===\n";
+
         for (int round = 1; round <= 3; ++round) {
-            std::cout << "\n--- Round " << round << " ---" << std::endl;
-            
-            // Step 1: Generate Hand
+            std::cout << "\n--- Round " << round << " ---\n";
+
+            // Step 1: Generate random cards in hand
             Hand playerHand = handGenerator.generateHand();
-            
-            // Step 2: Player plays selected hand (Menggunakan ChosenHand)
-            chosenHand.playHand(playerHand);
-            
-            // Step 3: Score Hand
-            int score = scoringRule.scoreHand(playerHand);
-            
-            // Step 6: Check Blind (Win/Lose)
-            bool isWin = blindRule.checkBlind(score);
-            
-            // Step 7: Earn Money (Reward)
-            int moneyGained = rewardRule.earnMoney(isWin, score);
-            playerMoney += moneyGained;
-            
-            std::cout << "Total Uang Saat Ini: $" << playerMoney << std::endl;
+
+            // Step 2: Player selects & plays chosen hand
+            chosenHand.selectFromHand(playerHand);
+            chosenHand.playHand();
+
+            // Step 3: Calculate base score from selected hand
+            int score = scoringRule.scoreHand(chosenHand.getSelectedHand());
+
+            // Step 4 & 5: Notify Joker observer & modify score
+            jokerCard.onHandPlayed(score);
+            score = jokerCard.modifyScore(score);
+
+            // Step 6: Check win / lose against blind
+            bool win = blindRule.checkBlind(score);
+
+            // Step 7: Calculate reward & update money
+            int reward = rewardRule.earnMoney(win, score);
+            playerMoney += reward;
+            std::cout << "Money gained: $" << reward << " | Total Money: $" << playerMoney << "\n";
         }
-        
-        std::cout << "\n=== RUN SESSION SELESAI ===" << std::endl;
+
+        std::cout << "\n=== Run Ended | Final Money: $" << playerMoney << " ===\n";
     }
 };
 

@@ -3,7 +3,6 @@
 #include <cstdlib>
 
 int main() {
-    // Inisialisasi random seed agar HandGenerator menghasilkan kartu yang benar-benar acak
     srand(static_cast<unsigned int>(time(0)));
 
     GameManager gameManager;
