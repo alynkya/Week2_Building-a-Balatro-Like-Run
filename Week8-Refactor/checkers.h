@@ -3,6 +3,7 @@
 
 #include "models.h"
 #include <algorithm>
+#include <map>
 
 class PokerHandChecker {
 protected:
@@ -18,14 +19,14 @@ public:
         if (nextChecker != nullptr) {
             return nextChecker->check(hand);
         }
-        return HandRank::HIGH_CARD; // Default jika tidak ada yang cocok
+        return HandRank::HIGH_CARD; // Default jika tidak ada kombinasi lain yang cocok
     }
 };
 
 class FlushChecker : public PokerHandChecker {
 public:
     HandRank check(const Hand& hand) override {
-        if (hand.cards.empty()) return PokerHandChecker::check(hand);
+        if (hand.cards.size() < 5) return PokerHandChecker::check(hand);
         
         bool isFlush = true;
         Suit firstSuit = hand.cards[0].suit;
@@ -61,6 +62,23 @@ public:
         }
 
         if (isStraight) return HandRank::STRAIGHT;
+        return PokerHandChecker::check(hand);
+    }
+};
+
+class PairChecker : public PokerHandChecker {
+public:
+    HandRank check(const Hand& hand) override {
+        std::map<int, int> rankCount;
+        for (const auto& card : hand.cards) {
+            rankCount[static_cast<int>(card.rank)]++;
+        }
+
+        for (const auto& pair : rankCount) {
+            if (pair.second >= 2) {
+                return HandRank::PAIR;
+            }
+        }
         return PokerHandChecker::check(hand);
     }
 };
