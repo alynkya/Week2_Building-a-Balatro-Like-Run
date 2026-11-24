@@ -140,7 +140,7 @@ public:
 class BlindRule {
 public:
     bool checkBlind(int score) {
-        int targetScore = 40;
+        int targetScore = 60;
         bool success = score >= targetScore;
         std::cout << "[BlindRule] Target Blind: " << targetScore
                   << " | Skor Akhir: " << score
